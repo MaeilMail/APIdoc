@@ -6,6 +6,6 @@ info:
 servers:
   - url: http://localhost:3000/
 paths:
-  $ref: './paths/_index.yaml'
+  $ref: './paths/_index.yaml' 
 components:
   $ref: './components/_index.yaml'
