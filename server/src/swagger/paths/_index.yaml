@@ -84,10 +84,10 @@
     operationId: getUserInfo
     content: application/json
     parameters:
-      name: Authorization
-      in: header
-      description: JWT
-      required: true
+      - name: Authorization
+        in: header
+        description: JWT
+        required: true
     responses:
       '200':
         description: 토큰 확인 후 유저 정보 전송
@@ -111,10 +111,10 @@
     operationId: updateUserInfo
     content: application/json
     parameters:
-      name: Authorization
-      in: header
-      description: usertoken to be passed as a header
-      required: true
+      - name: Authorization
+        in: header
+        description: usertoken to be passed as a header
+        required: true
     requestBody:
       description: 비밀번호 제외한 회원 정보 수정
       content:
@@ -161,10 +161,10 @@
     operationId: updateUserInfo
     content: application/json
     parameters:
-      name: Authorization
-      in: header
-      description: usertoken to be passed as a header
-      required: true
+      - name: Authorization
+        in: header
+        description: usertoken to be passed as a header
+        required: true
     requestBody:
       description: 비밀번호 수정
       content:
