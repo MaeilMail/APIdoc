@@ -248,7 +248,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/admin/users/:id:
+/admin/users/{id}:
   get:
     tags:
       - 관리자 페이지
@@ -309,7 +309,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/admin/reports/:id:
+/admin/reports/{id}:
   get:
     tags:
       - 관리자 페이지
@@ -370,7 +370,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/chats/:chat_id:
+/chats/{chat_id}:
   get:
     tags:
       - 편지
@@ -378,10 +378,11 @@
     operationId: getChatByChatId
     content: application/json
     parameters:
-      name: 대화방 고유 id
-      in: path
-      description: chat_id
-      required: true
+      - name: 대화방 고유 id
+        in: path
+        description: chat_id
+        type: number
+        required: true
     responses:
       '200':
         description: 대화 상세 조회.
@@ -440,12 +441,12 @@
       description: chat_id
       required: true 
 
-/chats/:chat_id/:letter_id:
-  get:
+#/chats/:chat_id/:letter_id:
+#  get:
 
 
-/letter:
-  get:
+#/letter:
+#  get:
 
-/recommend:
-  get:
+#/recommend:
+#  get:
