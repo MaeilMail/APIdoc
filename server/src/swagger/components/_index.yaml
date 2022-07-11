@@ -21,6 +21,15 @@ schemas:
       nickname:
         type: string
         description: 별명
+      location:
+        type: string
+        description: 위치한 국가
+      latitude:
+        type: number
+        description: 위도
+      longitude:
+        type: number
+        description: 경도
       status:
         type: string
         description: 일반 유저, 관리자, 정지 유저
@@ -41,21 +50,45 @@ schemas:
         format: date-time
         description: 업데이트 일자
         readOnly: true
+      favor:
+        $ref: '#/schemas/Favor'
 
   Favor:
     type: object
     properties:
-      favor1:
-        type: string
-      favor2:
-        type: string
-      favor3:
-        type: string
+      user_id:
+        type: number
+        description: 고유값
+        readOnly: true
+      movie:
+        type: boolean
+      language:
+        type: boolean
+      reading:
+        type: boolean
+      game:
+        type: boolean
+      coding:
+        type: boolean
+      fantasy:
+        type: boolean
+      sports:
+        type: boolean
+      entertainment:
+        type: boolean
+      music:
+        type: boolean
+      fashion:
+        type: boolean
+      art:
+        type: boolean
+      travel:
+        type: boolean
 
   Letter:
     type: object
     properties:
-      user_id:
+      letter_id:
         type: number
         description: 편지 고유값
         readOnly: true
@@ -91,12 +124,40 @@ schemas:
         type: string
         description: 보낸이 주소
         readOnly: true
-      title:
-        type: string
-        description: 제목
       content:
         type: string
         description: 내용
+
+  Chat:
+    type: object
+    properties:
+      chat_id:
+        type: number
+        description: 대화방 고유값
+        readOnly: true
+      user_a:
+        type: number
+        description: 대화 참가자 a의 고유 id
+        readOnly: true
+      a_status:
+        type: boolean
+        description: a의 대화방 사용 여부
+      user_b:
+        type: number
+        description: 대화 참가자 b의 고유 id
+        readOnly: true
+      b_status:
+        type: boolean
+        description: b의 대화방 사용 여부
+      created_at:
+        type: string
+        format: date-time
+        description: 생성 일자
+        readOnly: true
+      updated_at:
+        type: string
+        format: date-time
+        description: 업데이트 일자
 
   Friend:
     type: object
