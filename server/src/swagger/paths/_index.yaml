@@ -75,6 +75,26 @@
                   type: string
                   format: JWT
 
+/login/google:
+  get:
+    tags:
+      - 로그인
+    description: 구글 로그인
+    operationId: getUserToken
+    content: application/json
+    responses:
+      '200':
+        description: 구글 연동 성공 시 db에 계정 생성하고 토큰 전달
+        content:
+          application/json:
+            schema:
+              type: object
+              requried: true
+              properties:
+                jwt: 
+                  type: string
+                  format: JWT
+
 /user:
   get:
     tags:
