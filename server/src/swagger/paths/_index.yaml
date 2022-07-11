@@ -514,6 +514,10 @@
     responses:
       '200':
         description: 추천된 친구 조회 완료
+        content:
+          application/json:
+            schema:
+                - $ref: '../components/_index.yaml#/schemas/User'
       '403':
         description: 토큰 오류.
         content:
