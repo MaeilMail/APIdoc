@@ -197,6 +197,11 @@
     description: 회원 탈퇴
     operationId: updateUserStatus
     content: application/json
+    parameters:
+      - name: Authorization
+        in: header
+        description: usertoken to be passed as a header
+        required: true
     requestBody:
       description: user pw to update status
       content:
@@ -229,10 +234,10 @@
     operationId: getUsers
     content: application/json
     parameters:
-      name: Authorization
-      in: header
-      description: JWT
-      required: true
+      - name: Authorization
+        in: header
+        description: JWT
+        required: true
     responses:
       '200':
         description: 토큰 확인 후 유저 목록 전송
@@ -256,6 +261,10 @@
     operationId: getUserById
     content: application/json
     parameters:
+      - name: Authorization
+        in: header
+        description: usertoken to be passed as a header
+        required: true
       - name: 유저 고유 id
         in: path
         description: user_id
@@ -317,6 +326,10 @@
     operationId: getReportById
     content: application/json
     parameters:
+      - name: Authorization
+        in: header
+        description: JWT
+        required: true
       - name: 신고 고유 id
         in: path
         description: user_id
@@ -481,8 +494,6 @@
             schema:
               type: string
               example: "조회할 수 없는 편지입니다."
-      
-
 
 /letter:
   get:
@@ -490,6 +501,12 @@
       - 편지
     description: 오고 있는 편지 조회
     operationId: getArrivingLetter
+    parameters:
+      - name: 대화방 고유 id
+        in: path
+        description: chat_id
+        type: number
+        required: true
     responses:
       '200':
         description: 오고 있는 편지 조회 완료
@@ -511,6 +528,11 @@
       - 친구
     description: 추천된 친구 조회
     operationId: getRecommendedFriends
+    parameters:
+      - name: Authorization
+        in: header
+        description: usertoken to be passed as a header
+        required: true
     responses:
       '200':
         description: 추천된 친구 조회 완료
