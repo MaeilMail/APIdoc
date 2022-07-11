@@ -103,7 +103,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-  put:
+  patch:
     tags:
       - 마이페이지
     summary: Update user profile by user id
@@ -154,7 +154,7 @@
         description: 변경 전 값과의 충돌
 
 /user/password:
-  put:
+  patch:
     tags:
       - 마이페이지
     summary: Update user password
@@ -190,7 +190,7 @@
         description: 변경 전 값과의 충돌
 
 /user/withdrawal:
-  put:
+  patch:
     tags:
       - 마이페이지
     summary: Update user status into withdrawal
@@ -356,7 +356,7 @@
               type: string
               example: "해당 신고가 존재하지 않습니다."
   
-/chats:
+/friends:
   get:
     tags:
       - 편지
@@ -383,7 +383,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/chats/{chat_id}:
+/friends/{user_id}:
   get:
     tags:
       - 편지
@@ -419,7 +419,7 @@
             schema:
               type: string
               example: "해당 대화가 존재하지 않습니다."
-  put:
+  patch:
     tags:
       - 편지
     description: 대화 삭제
@@ -454,7 +454,7 @@
         description: chat_id
         required: true 
 
-/chats/{chat_id}/{letter_id}:
+/friends/{user_id}/{letter_id}:
   get:
     tags:
       - 편지
