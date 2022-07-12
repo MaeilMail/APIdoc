@@ -126,8 +126,8 @@
   patch:
     tags:
       - 마이페이지
-    summary: Update user profile by user id
-    description: 비밀번호 제외한 정보 업데이트
+    summary: Update user profile by userId
+    description: <!비밀번호!> 제외한 정보 업데이트
     operationId: updateUserInfo
     content: application/json
     parameters:
@@ -136,26 +136,11 @@
         description: usertoken to be passed as a header
         required: true
     requestBody:
-      description: 비밀번호 제외한 회원 정보 수정
+      description: <!비밀번호!> 제외한 회원 정보 수정
       content:
         application/json:
             schema:
-              type: object
-              requried: true
-              properties:
-                email:
-                  type: string
-                  format: email
-                nickname:
-                  type: string
-                  description: 별명
-                profile_text:
-                  type: string
-                  description: 한 줄 소개
-                profile_image:
-                  type: string
-                  description: 프로필 사진(이모지) url
-                
+              $ref: '../components/_index.yaml#/schemas/User'  
     responses:
       '200':
         description: 토큰 확인 후 수정된 프로필 정보 전송
@@ -243,8 +228,6 @@
             schema:
               type: string
               example: "정상적인 토큰이 아닙니다." 
-      '409' :
-        description: 변경 전 값과의 충돌
 
 /admin/users:
   get:
@@ -273,7 +256,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/admin/users/{id}:
+/admin/users/{userId}:
   get:
     tags:
       - 관리자 페이지
@@ -287,7 +270,7 @@
         required: true
       - name: 유저 고유 id
         in: path
-        description: user_id
+        description: userId
         required: true
     responses:
       '200':
@@ -338,7 +321,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/admin/reports/{id}:
+/admin/reports/{userId}:
   get:
     tags:
       - 관리자 페이지
@@ -352,7 +335,7 @@
         required: true
       - name: 신고 고유 id
         in: path
-        description: user_id
+        description: userId
         required: true
     responses:
       '200':
@@ -390,11 +373,11 @@
         required: true
     responses:
       '200':
-        description: 토큰 확인 후 대화 목록 전송
+        description: 토큰 확인 후 대화 기록이 있는 사용자 id 전송
         content:
           application/json:
             schema:
-              $ref: '../components/_index.yaml#/schemas/Chat'
+              $ref: '../components/_index.yaml#/schemas/User'
       '403':
         description: 토큰 오류.
         content:
@@ -403,28 +386,26 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/friends/{user_id}:
+/friends/{userId}:
   get:
     tags:
       - 편지
-    description: 대화 상세 조회
+    description: 친구와의 편지 기록 조회
     operationId: getChatByChatId
     content: application/json
     parameters:
-      - name: 대화방 고유 id
+      - name: 대화 상대 id
         in: path
-        description: chat_id
+        description: userId
         type: number
         required: true
     responses:
       '200':
-        description: 대화 상세 조회.
+        description: 대화 기록 배열(?)로 조회. [row1, row2, ...]
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: '../components/_index.yaml#/schemas/Chat'
-                - $ref: '../components/_index.yaml#/schemas/Letter'
+              - $ref: '../components/_index.yaml#/schemas/Letter'
       '403':
         description: 토큰 오류.
         content:
@@ -442,7 +423,7 @@
   patch:
     tags:
       - 편지
-    description: 대화 삭제
+    description: 대화 기록 삭제 (아직 구현 X)
     operationId: deleteChat
     content: application/json
     parameters:
@@ -469,26 +450,26 @@
     operationId: addLetter
     content: application/json
     parameters:
-      - name: 대화방 고유 id
+      - name: 상대 userId
         in: path
-        description: chat_id
+        description: userId
         required: true 
 
-/friends/{user_id}/{letter_id}:
+/friends/{userId}/{letterId}:
   get:
     tags:
       - 편지
     description: 대화 속 편지 상세 조회
     operationId: getLetterByChatId
     parameters:
-      - name: 대화방 고유 id
+      - name: 상대 userId
         in: path
-        description: chat_id
+        description: userId
         type: number
         required: true
       - name: 편지 고유 id
         in: path
-        description: letter_id
+        description: letterId
         type: number
         required: true
     responses:
@@ -498,7 +479,7 @@
           application/json:
             schema:
               allOf:
-                - $ref: '../components/_index.yaml#/schemas/Chat'
+                - $ref: '../components/_index.yaml#/schemas/User'
                 - $ref: '../components/_index.yaml#/schemas/Letter'
       '403':
         description: 토큰 오류.
@@ -520,12 +501,11 @@
     tags:
       - 메인 화면
     description: 오고 있는 편지 조회
-    operationId: getArrivingLetter
+    operationId: getRecentLetter
     parameters:
-      - name: 대화방 고유 id
-        in: path
-        description: chat_id
-        type: number
+      - name: Authorization
+        in: header
+        description: JWT
         required: true
     responses:
       '200':
