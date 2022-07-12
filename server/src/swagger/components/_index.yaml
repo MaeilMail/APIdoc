@@ -24,6 +24,13 @@ schemas:
       gender:
         type: string
         description: 성별(남, 여, 기타)
+      language:
+        type: string
+        description: 회원가입 시에는 통신 X
+      birthday:
+        type: string
+        format: date-time
+        description: 생일
       location:
         type: string
         description: 위치한 국가
