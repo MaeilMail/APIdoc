@@ -6,7 +6,7 @@ schemas:
       - password
       - nickname
     properties:
-      user_id:
+      userId:
         type: number
         description: 고유값
         readOnly: true
@@ -21,6 +21,9 @@ schemas:
       nickname:
         type: string
         description: 별명
+      gender:
+        type: string
+        description: 성별(남, 여, 기타)
       location:
         type: string
         description: 위치한 국가
@@ -34,18 +37,18 @@ schemas:
         type: string
         description: 일반 유저, 관리자, 정지 유저
         readOnly: true
-      profile_text:
+      profileText:
         type: string
         description: 한 줄 소개
-      profile_image:
+      profileEmoji:
         type: string
-        description: 프로필 사진(이모지) url
-      created_at:
+        description: 프로필 사진(이모지) 문자열
+      createdAt:
         type: string
         format: date-time
         description: 생성 일자
         readOnly: true
-      updated_at:
+      updatedAt:
         type: string
         format: date-time
         description: 업데이트 일자
@@ -56,7 +59,7 @@ schemas:
   Favor:
     type: object
     properties:
-      user_id:
+      userId:
         type: number
         description: 고유값
         readOnly: true
@@ -88,39 +91,39 @@ schemas:
   Letter:
     type: object
     properties:
-      letter_id:
+      letterId:
         type: number
         description: 편지 고유값
         readOnly: true
-      send_id:
+      sendId:
         type: number
         description: 보낸이 고유 id
-      receive_id:
+      receiveId:
         type: number
         description: 받는이 고유 id
       status:
         type: string
         description: 편지 상태(발송 중, 수신 완료 등)
         readOnly: true
-      send_date:
+      sendDate:
         type: string
         format: date-time
         description: 보낸 일자
         readOnly: true
-      delivery_time:
+      deliveryTime:
         type: number
         description: 배송 시간
         readOnly: true
-      receive_date:
+      receiveDate:
         type: string
         format: date-time
         description: 수신 일자
         readOnly: true
-      send_location:
+      sendLocation:
         type: string
         description: 보낸이 주소
         readOnly: true
-      receive_location:
+      receiveLocation:
         type: string
         description: 보낸이 주소
         readOnly: true
@@ -131,30 +134,30 @@ schemas:
   Chat:
     type: object
     properties:
-      chat_id:
+      chatId:
         type: number
         description: 대화방 고유값
         readOnly: true
-      user_a:
+      userA:
         type: number
         description: 대화 참가자 a의 고유 id
         readOnly: true
-      a_status:
+      AStatus:
         type: boolean
         description: a의 대화방 사용 여부
-      user_b:
+      userB:
         type: number
         description: 대화 참가자 b의 고유 id
         readOnly: true
-      b_status:
+      BStatus:
         type: boolean
         description: b의 대화방 사용 여부
-      created_at:
+      createdAt:
         type: string
         format: date-time
         description: 생성 일자
         readOnly: true
-      updated_at:
+      updatedAt:
         type: string
         format: date-time
         description: 업데이트 일자
@@ -162,26 +165,26 @@ schemas:
   Friend:
     type: object
     properties:
-      friend_id:
+      friendId:
         type: number
         description: 친구 관계 고유값
         readOnly: true
-      send_id:
+      sendId:
         type: number
         description: 친구 신청 보낸이 고유 id
-      receive_id:
+      receiveId:
         type: number
         description: 친구 신청 받는이 고유 id
       status:
         type: string
         description: 친구 관계 상태
         readOnly: true
-      created_at:
+      createdAt:
         type: string
         format: date-time
         description: 생성 일자
         readOnly: true
-      updated_at:
+      updatedAt:
         type: string
         format: date-time
         description: 업데이트 일자
@@ -190,26 +193,26 @@ schemas:
   Report:
     type: object
     properties:
-      report_id:
+      reportId:
         type: number
         description: 신고 고유값
         readOnly: true
-      send_id:
+      sendId:
         type: number
         description: 신고자 고유 id
-      receive_id:
+      receiveId:
         type: number
         description: 피신고자 고유 id
       status:
         type: boolean
         description: 신고 처리 상태
         readOnly: true
-      created_at:
+      createdAt:
         type: string
         format: date-time
         description: 생성 일자
         readOnly: true
-      updated_at:
+      updatedAt:
         type: string
         format: date-time
         description: 업데이트 일자
@@ -218,28 +221,27 @@ schemas:
   Block:
     type: object
     properties:
-      block_id:
+      blockId:
         type: number
         description: 차단 고유값
         readOnly: true
-      send_id:
+      sendId:
         type: number
         description: 차단자 고유 id
-      receive_id:
+      receiveId:
         type: number
         description: 피차단자 고유 id
       status:
         type: string
         description: 차단 상태
         readOnly: true
-      created_at:
+      createdAt:
         type: string
         format: date-time
         description: 생성 일자
         readOnly: true
-      updated_at:
+      updatedAt:
         type: string
         format: date-time
         description: 업데이트 일자
         readOnly: true
-  
