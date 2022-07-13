@@ -229,7 +229,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다." 
 
-/admin/users:
+/users/admin:
   get:
     tags:
       - 관리자 페이지
@@ -256,7 +256,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/admin/users/{userId}:
+/users/admin/{userId}:
   get:
     tags:
       - 관리자 페이지
@@ -294,7 +294,7 @@
               type: string
               example: "해당 계정이 존재하지 않습니다."
 
-/admin/reports:
+/reports/admin:
   get:
     tags:
       - 관리자 페이지
@@ -321,7 +321,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/admin/reports/{userId}:
+/reports/admin/{userId}:
   get:
     tags:
       - 관리자 페이지
@@ -496,10 +496,80 @@
               type: string
               example: "조회할 수 없는 편지입니다."
 
+/users/search:
+  get:
+    tags:
+      - 메인 화면_검색
+    description: 검색 결과 조회
+    operationId: getSearchResult
+    content: application/json
+    parameters:
+      - name: 검색
+        in: query
+        description: 유저 검색
+        schema:
+          type: string
+    response:
+      '200':
+        description: 유저 상세 조회.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/_index.yaml#/schemas/User'
+      '403':
+        description: 토큰 오류.
+        content:
+          application/json:
+            schema:
+              type: string
+              example: "정상적인 토큰이 아닙니다."
+      '404':
+        description: id 이상
+        content:
+          application/json:
+            schema:
+              type: string
+              example: "검색 결과가 존재하지 않습니다."
+
+/users/search/:userId:
+  get:
+    tags:
+      - 메인 화면_검색
+    description: 검색 결과에서 유저 상세 조회
+    operationId: getUserById
+    content: application/json
+    parameters:
+      - name: 대화 상대 id
+        in: path
+        description: userId
+        type: number
+        required: true
+    response:
+      '200':
+        description: 유저 상세 조회.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/_index.yaml#/schemas/User'
+      '403':
+        description: 토큰 오류.
+        content:
+          application/json:
+            schema:
+              type: string
+              example: "정상적인 토큰이 아닙니다."
+      '404':
+        description: id 이상
+        content:
+          application/json:
+            schema:
+              type: string
+              example: "해당 유저가 존재하지 않습니다."
+
 /letter:
   get:
     tags:
-      - 메인 화면
+      - 메인 화면_나에게 오는 편지
     description: 오고 있는 편지 조회
     operationId: getRecentLetter
     parameters:
