@@ -95,7 +95,7 @@
                   type: string
                   format: JWT
 
-/mypage:
+/user:
   get:
     tags:
       - 마이페이지
@@ -158,7 +158,7 @@
       '409' :
         description: 변경 전 값과의 충돌
 
-/mypage/password:
+/user/password:
   patch:
     tags:
       - 마이페이지
@@ -194,7 +194,7 @@
       '409' :
         description: 변경 전 값과의 충돌
 
-/mypage/withdrawal:
+/user/withdrawal:
   patch:
     tags:
       - 마이페이지
@@ -229,7 +229,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다." 
 
-/users/admin:
+/users:
   get:
     tags:
       - 관리자 페이지
@@ -256,7 +256,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/users/admin/{userId}:
+/users/{userId}:
   get:
     tags:
       - 관리자 페이지
@@ -294,7 +294,7 @@
               type: string
               example: "해당 계정이 존재하지 않습니다."
 
-/reports/admin:
+/reports:
   get:
     tags:
       - 관리자 페이지
@@ -321,7 +321,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/reports/admin/{userId}:
+/reports/{reportId}:
   get:
     tags:
       - 관리자 페이지
@@ -359,12 +359,12 @@
               type: string
               example: "해당 신고가 존재하지 않습니다."
   
-/letters:
+/letters/users:
   get:
     tags:
       - 편지
     description: 친구 목록 조회
-    operationId: getChatsById
+    operationId: getContactedUsersById
     content: application/json
     parameters:
       - name: Authorization
@@ -386,16 +386,16 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/letters/{userId}:
+/letters{?contact=userId}:
   get:
     tags:
       - 편지
     description: 친구와의 편지 기록 조회
-    operationId: getChatByChatId
+    operationId: getLettersByUserId
     content: application/json
     parameters:
       - name: 대화 상대 id
-        in: path
+        in: query
         description: userId
         type: number
         required: true
@@ -428,7 +428,7 @@
     content: application/json
     parameters:
       - name: 대화방 고유 id
-        in: path
+        in: query
         description: chat_id
         required: true
     responses:
@@ -451,19 +451,19 @@
     content: application/json
     parameters:
       - name: 상대 userId
-        in: path
+        in: query
         description: userId
         required: true 
 
-/letters/{userId}/{letterId}:
+/letters{?contact=userId}/{letterId}:
   get:
     tags:
       - 편지
     description: 대화 속 편지 상세 조회
-    operationId: getLetterByChatId
+    operationId: getLetterByletterId
     parameters:
       - name: 상대 userId
-        in: path
+        in: query
         description: userId
         type: number
         required: true
@@ -531,7 +531,7 @@
               type: string
               example: "검색 결과가 존재하지 않습니다."
 
-/users/search/:userId:
+/users/search/{userId}:
   get:
     tags:
       - 메인 화면_검색
@@ -566,13 +566,17 @@
               type: string
               example: "해당 유저가 존재하지 않습니다."
 
-/letters/yet:
+/letters{?status=incoming}:
   get:
     tags:
       - 메인 화면_편지
     description: 오고 있는 편지 조회
-    operationId: getOngoingLetter
+    operationId: getIncomingLetters
     parameters:
+      - name: status=incoming
+        in: query
+        description: 아직 도착하지 않음
+        required: true
       - name: Authorization
         in: header
         description: JWT
@@ -592,13 +596,17 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/letters/recent:
+/letters{?status=arrived}:
   get:
     tags:
       - 메인 화면_편지
     description: 도착한 편지
-    operationId: getLetters
+    operationId: getArrivedLetters
     parameters:
+      - name: status=arrived
+        in: query
+        description: 아직 도착하지 않음
+        required: true
       - name: Authorization
         in: header
         description: JWT
@@ -618,13 +626,17 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
   
-/letters/recent/:letterId:
+/letters{?status=arrived}/{letterId}:
   get:
     tags:
       - 메인 화면_편지
     description: 도착한 편지 상세
     operationId: getLetters
     parameters:
+      - name: status = arrived
+        in: query
+        description: 아직 도착하지 않음
+        required: true
       - name: 편지 id
         in: path
         description: letterId
@@ -677,14 +689,14 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/users/recommend/:userId:
+/users/recommend/{userId}:
   get:
     tags:
       - 메인 화면_추천
     description: 추천된 친구 조회
     operationId: getUserById
     parameters:
-      - name: 친구 상세 조회
+      - name: 사용자 id
         in: path
         description: userId
         required: true
