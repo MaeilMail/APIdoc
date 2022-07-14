@@ -5,6 +5,10 @@ schemas:
       - email
       - password
       - nickname
+      - gender
+      - location
+      - latitude
+      - longitude
     properties:
       userId:
         type: number

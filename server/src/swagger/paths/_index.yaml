@@ -10,20 +10,28 @@
       required: true
       content:
         application/json:
-          schema: 
-            $ref: '../components/_index.yaml#/schemas/User'
-          examples:
-            user:
-              email: OOO@OOO.COM
-              password: 12345678
-              nickname: ba boo     
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+                format: password
+              nickname:
+                type: string
+              gender:
+                type: string
+              location:
+                type: string
+              latitude:
+                type: number
+              longitude:
+                type: number
     responses:
       '201':
         description: 회원가입 성공
-        content:
-          application/json:
-            schema: 
-              $ref: '../components/_index.yaml#/schemas/User'
       '406':
         description: 중복이 아닌 경우 true, 중복인 경우 false
         content:
@@ -37,36 +45,6 @@
                   type: boolean
 
 /signup/google:
-  get:
-    tags:
-      - 회원가입
-    description: 구글 회원가입; 토큰을 통해 유저 확인 후 이메일 전송
-    operationId: getUserById
-    content: application/json
-    parameters:
-      - name: Authorization
-        in: header
-        description: JWT
-        required: true
-    responses:
-      '200':
-        description: 토큰 확인 후 유저 이메일 전송
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-      '403':
-        description: 토큰 오류.
-        content:
-          application/json:
-            schema:
-              type: string
-              example: "정상적인 토큰이 아닙니다."
-
   patch:
     tags:
       - 회원가입
@@ -83,7 +61,18 @@
       content:
         application/json:
             schema:
-              $ref: '../components/_index.yaml#/schemas/User'  
+              type: object
+              properties:
+                nickname:
+                  type: string
+                gender:
+                  type: string                
+                location:
+                  type: string
+                latitude:
+                  type: number
+                longitude:
+                  type: number
 
 /login:
   post:
@@ -105,10 +94,10 @@
                 format: email
               password:
                 type: string
+                format: password
           example:
-            user:
-              email: OOO@OOO.COM
-              password: 12345678
+            email: OOO@OOO.COM
+            password: 12345678
     responses:
       '200':
         description: 로그인 성공 시 프론트로 토큰 전송
@@ -131,24 +120,12 @@
     content: application/json
     responses:
       '200':
-        description: 구글 연동 성공 시 db에 계정 생성하고 토큰 전달
-        content:
-          application/json:
-            schema:
-              type: object
-              requried: true
-              properties:
-                jwt: 
-                  type: string
-                  format: JWT
-                flag:
-                  type: boolean
+        description: 'callbackurl?token={token}'
 
 /user:
   get:
     tags:
       - 마이페이지
-    summary: Find user by token
     description: 회원 정보 조회
     operationId: getUserInfo
     content: application/json
@@ -175,14 +152,13 @@
   patch:
     tags:
       - 마이페이지
-    summary: Update user profile by userId
     description: <!비밀번호!> 제외한 정보 업데이트
-    operationId: updateUserInfo
+    operationId: updateUser
     content: application/json
     parameters:
       - name: Authorization
         in: header
-        description: usertoken to be passed as a header
+        description: JWT
         required: true
     requestBody:
       description: <!비밀번호!> 제외한 회원 정보 수정
@@ -211,13 +187,12 @@
   patch:
     tags:
       - 마이페이지
-    summary: Update user password
     operationId: updateUserInfo
     content: application/json
     parameters:
       - name: Authorization
         in: header
-        description: usertoken to be passed as a header
+        description: JWT 
         required: true
     requestBody:
       description: 비밀번호 수정
@@ -247,9 +222,8 @@
   patch:
     tags:
       - 마이페이지
-    summary: Update user status into withdrawal
     description: 회원 탈퇴
-    operationId: updateUserStatus
+    operationId: updateUser
     content: application/json
     parameters:
       - name: Authorization
@@ -315,7 +289,7 @@
     parameters:
       - name: Authorization
         in: header
-        description: usertoken to be passed as a header
+        description: JWT
         required: true
       - name: 유저 고유 id
         in: path
@@ -426,7 +400,10 @@
         content:
           application/json:
             schema:
-              $ref: '../components/_index.yaml#/schemas/User'
+              type: array
+              items:
+                type: string
+                example: userId
       '403':
         description: 토큰 오류.
         content:
@@ -450,11 +427,14 @@
         required: true
     responses:
       '200':
-        description: 대화 기록 배열(?)로 조회. [row1, row2, ...]
+        description: 편지 목록
         content:
           application/json:
             schema:
-              - $ref: '../components/_index.yaml#/schemas/Letter'
+              type: array
+              items:
+                type: string
+                example: letterId
       '403':
         description: 토큰 오류.
         content:
@@ -527,9 +507,7 @@
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: '../components/_index.yaml#/schemas/User'
-                - $ref: '../components/_index.yaml#/schemas/Letter'
+              $ref: '../components/_index.yaml#/schemas/Letter'
       '403':
         description: 토큰 오류.
         content:
@@ -564,7 +542,10 @@
         content:
           application/json:
             schema:
-              $ref: '../components/_index.yaml#/schemas/User'
+              type: array
+              items:
+                type: string
+                example: userId
       '403':
         description: 토큰 오류.
         content:
@@ -636,7 +617,40 @@
         content:
           application/json:
             schema:
-                - $ref: '../components/_index.yaml#/schemas/Letter'
+              type: array
+              items:
+                type: string
+                example: letterId
+      '403':
+        description: 토큰 오류.
+        content:
+          application/json:
+            schema:
+              type: string
+              example: "정상적인 토큰이 아닙니다."
+
+/letters{?status=incoming}/{letterId}:
+  get:
+    tags:
+      - 메인 화면_편지
+    description: 오고 있는 편지 조회
+    operationId: getLetterById
+    parameters:
+      - name: status=incoming
+        in: query
+        description: 아직 도착하지 않음
+        required: true
+      - name: Authorization
+        in: header
+        description: JWT
+        required: true
+    responses:
+      '200':
+        description: 오고 있는 편지 조회 완료
+        content:
+          application/json:
+            schema:
+              - $ref: '../components/_index.yaml#/schemas/Letter'
       '403':
         description: 토큰 오류.
         content:
@@ -666,7 +680,10 @@
         content:
           application/json:
             schema:
-                - $ref: '../components/_index.yaml#/schemas/Letter'
+              type: array
+              items:
+                type: string
+                example: letterId
       '403':
         description: 토큰 오류.
         content:
@@ -680,7 +697,7 @@
     tags:
       - 메인 화면_편지
     description: 도착한 편지 상세
-    operationId: getLetters
+    operationId: getLetterById
     parameters:
       - name: status = arrived
         in: query
@@ -696,7 +713,7 @@
         content:
           application/json:
             schema:
-                - $ref: '../components/_index.yaml#/schemas/Letter'
+              - $ref: '../components/_index.yaml#/schemas/Letter'
       '403':
         description: 토큰 오류.
         content:
@@ -729,7 +746,10 @@
         content:
           application/json:
             schema:
-                - $ref: '../components/_index.yaml#/schemas/User'
+              type: array
+              items:
+                type: string
+                example: userId
       '403':
         description: 토큰 오류.
         content:
@@ -755,7 +775,7 @@
         content:
           application/json:
             schema:
-                - $ref: '../components/_index.yaml#/schemas/User'
+              - $ref: '../components/_index.yaml#/schemas/User'
       '403':
         description: 토큰 오류.
         content:
