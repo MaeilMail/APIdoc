@@ -4,9 +4,7 @@
       - 회원가입
     description: 회원가입
     operationId: addUser
-    content: 
-      application/json
-    required: true
+    content: application/json
     requestBody:
       description: 이메일, 패스워드, 닉네임, 프로필, (선호는 따로?)
       required: true
@@ -37,6 +35,55 @@
                   type: boolean
                 nickname:
                   type: boolean
+
+/signup/google:
+  get:
+    tags:
+      - 회원가입
+    description: 구글 회원가입; 토큰을 통해 유저 확인 후 이메일 전송
+    operationId: getUserById
+    content: application/json
+    parameters:
+      - name: Authorization
+        in: header
+        description: JWT
+        required: true
+    responses:
+      '200':
+        description: 토큰 확인 후 유저 이메일 전송
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      '403':
+        description: 토큰 오류.
+        content:
+          application/json:
+            schema:
+              type: string
+              example: "정상적인 토큰이 아닙니다."
+
+  patch:
+    tags:
+      - 회원가입
+    description: 구글 회원가입, 토큰으로 id 확인 후 더미 데이터 수정
+    operationId: updateUserInfo
+    content: application/json
+    parameters:
+      - name: Authorization
+        in: header
+        description: JWT
+        required: true
+    requestBody:
+      description: <!비밀번호!> 제외한 회원 정보 수정
+      content:
+        application/json:
+            schema:
+              $ref: '../components/_index.yaml#/schemas/User'  
 
 /login:
   post:
@@ -94,6 +141,8 @@
                 jwt: 
                   type: string
                   format: JWT
+                flag:
+                  type: boolean
 
 /user:
   get:
