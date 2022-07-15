@@ -412,7 +412,7 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/letters{?contact=userId}:
+/letters/users{?contact=userId}:
   get:
     tags:
       - 편지
@@ -484,7 +484,7 @@
         description: userId
         required: true 
 
-/letters{?contact=userId}/{letterId}:
+/letters/users{?contact=userId}/{letterId}:
   get:
     tags:
       - 편지
