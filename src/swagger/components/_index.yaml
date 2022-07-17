@@ -10,10 +10,6 @@ schemas:
       - latitude
       - longitude
     properties:
-      userId:
-        type: number
-        description: 고유값
-        readOnly: true
       email:
         type: string
         format: email
@@ -46,26 +42,12 @@ schemas:
       longitude:
         type: number
         description: 경도
-      status:
-        type: string
-        description: 일반 유저, 관리자, 정지 유저
-        readOnly: true
       profileText:
         type: string
         description: 한 줄 소개
       profileEmoji:
         type: string
         description: 프로필 사진(이모지) 문자열
-      createdAt:
-        type: string
-        format: date-time
-        description: 생성 일자
-        readOnly: true
-      updatedAt:
-        type: string
-        format: date-time
-        description: 업데이트 일자
-        readOnly: true
       favor:
         $ref: '#/schemas/Favor'
 

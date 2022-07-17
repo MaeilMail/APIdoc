@@ -59,13 +59,23 @@
         in: header
         description: JWT
         required: true
+      - name: isAdmin=true
+        in: query
+        description: isAdmin=true
+        required: true
     responses:
       '200':
         description: 토큰 확인 후 유저 목록 전송
         content:
           application/json:
             schema:
-              $ref: '../components/_index.yaml#/schemas/User'
+              allOf:
+                - $ref: '../components/_index.yaml#/schemas/User'
+                - type: object
+                  properties:
+                    status: 
+                      type: string
+                      example: active
       '403':
         description: 토큰 오류.
         content:
@@ -77,18 +87,21 @@
 /api/users?search=nickname:
   get:
     tags:
-      - 메인 화면_검색
+      - 메인 화면
     description: 검색 결과 조회
     content: application/json
     parameters:
-      - name: 검색
+      - name: Authorization
+        in: header
+        description: token
+        required: true
+      - name: search=${nickname}
         in: query
-        description: search = ${닉네임 검색어}
-        schema:
-          type: string
-    response:
+        description: nickname을 검색
+        required: true
+    responses:
       '200':
-        description: 유저 상세 조회.
+        description: 검색 결과
         content:
           application/json:
             schema:
@@ -114,16 +127,17 @@
 /api/users?recommend=true:
   get:
     tags:
-      - 메인 화면_추천
+      - 메인 화면
     description: 추천된 친구 조회
     parameters:
       - name: Authorization
         in: header
         description: token
         required: true
-      - name: query string
+      - name: recommend=true
         in: query
-        description: 랜덤 추천 상대 목록 조회
+        description: true
+        required: true
     responses:
       '200':
         description: 추천된 친구 조회 완료
@@ -145,7 +159,7 @@
 /api/users/:userId:
   get:
     tags:
-      - 메인 화면
+      - 유저 프로필
     description: 유저 상세 조회
     operationId: getUserById
     content: application/json
@@ -281,11 +295,12 @@
       content:
         application/json:
             schema:
-              - $ref: '../components/_index.yaml#/schemas/User'
-              - type: object
-                example: 
-                  currentPassword: 현재 비밀번호
-                  newPassword: 바꿀 비밀번호
+              allOf: 
+                - $ref: '../components/_index.yaml#/schemas/User'
+                - type: object
+                  example: 
+                    currentPassword: 현재 비밀번호
+                    newPassword: 바꿀 비밀번호
     responses:
       '200':
         description: 토큰 확인 후 수정된 프로필 정보 전송
@@ -312,9 +327,10 @@
         in: header
         description: JWT
         required: true
-      - name: query string
+      - name: isGoogle=true
         in: query
-        description: /googleSignup에서 'isGoogle=true' 쿼리를 달아 api 요청
+        description: isGoogle=true
+        required: true
     requestBody:
       description: <!비밀번호!> 제외한 회원 정보 수정
       content:
@@ -359,18 +375,23 @@
         description: JWT
         required: true
     requestBody:
-      description: <!비밀번호!> 제외한 회원 정보 수정
+      description: 현재 비밀번호
       content:
         application/json:
           schema:
-            $ref: '../components/_index.yaml#/schemas/User'        
+            type: object
+          example:
+            currentPassword: 12345678
     responses:
       '200':
         description: 토큰 확인 후 수정된 프로필 정보 전송
         content:
           application/json:
             schema:
-              $ref: '../components/_index.yaml#/schemas/User'
+              type: object
+            example:
+              result: success / failed
+              message: 탈퇴되었습니다. 탈퇴에 실패하였습니다.
       '403':
         description: 토큰 오류.
         content:
@@ -421,7 +442,7 @@
         in: header
         description: JWT
         required: true
-      - name: path params
+      - name: userId
         in: path
         description: 상대 userId
         required: true 
@@ -433,8 +454,16 @@
             schema:
               type: array
               items:
-                type: string
-                example: letterId
+                type: object
+                example: 
+                  letterId: 1
+                  sendId: 1
+                  sendNickname: 바보가
+                  receiveId: 2
+                  receiveNickname: 바보에게
+                  content: 박명수
+                  sendDate: "2022-07-17T14:49:$4"
+                  status: read
       '403':
         description: 토큰 오류.
         content:
@@ -459,7 +488,7 @@
         in: header
         description: JWT
         required: true
-      - name: path params
+      - name: userId
         in: path
         description: 상대 userId
         required: true 
@@ -484,7 +513,7 @@
         in: header
         description: JWT
         required: true
-      - name: path params
+      - name: userId
         in: path
         description: 상대 userId
         required: true 
@@ -521,9 +550,9 @@
         description: userId
         type: number
         required: true
-      - name: 편지 고유 id
+      - name: letterId
         in: path
-        description: letterId
+        description: 편지 고유 id
         type: number
         required: true
     responses:
@@ -551,11 +580,11 @@
 /api/letters?status=status:
   get:
     tags:
-      - 메인 화면_편지
+      - 메인 화면
     description: 오고 있는 편지 조회
     operationId: getIncomingLetters
     parameters:
-      - name: Letter.status
+      - name: status=${status}
         in: query
         description: send = 아직 도착지 않음, receive = 도착함, read = 읽음
         required: true
@@ -581,103 +610,67 @@
               type: string
               example: "정상적인 토큰이 아닙니다."
 
-/reports:
-  get:
-    tags:
-      - 관리자 페이지
-    description: 신고 목록 조회
-    operationId: getReports
-    content: application/json
-    parameters:
-      - name: Authorization
-        in: header
-        description: JWT
-        required: true
-    responses:
-      '200':
-        description: 토큰 확인 후 신고 목록 전송
-        content:
-          application/json:
-            schema:
-              $ref: '../components/_index.yaml#/schemas/Report'
-      '403':
-        description: 토큰 오류.
-        content:
-          application/json:
-            schema:
-              type: string
-              example: "정상적인 토큰이 아닙니다."
+# /reports:
+#   get:
+#     tags:
+#       - 관리자 페이지
+#     description: 신고 목록 조회
+#     operationId: getReports
+#     content: application/json
+#     parameters:
+#       - name: Authorization
+#         in: header
+#         description: JWT
+#         required: true
+#     responses:
+#       '200':
+#         description: 토큰 확인 후 신고 목록 전송
+#         content:
+#           application/json:
+#             schema:
+#               $ref: '../components/_index.yaml#/schemas/Report'
+#       '403':
+#         description: 토큰 오류.
+#         content:
+#           application/json:
+#             schema:
+#               type: string
+#               example: "정상적인 토큰이 아닙니다."
 
-/reports/{reportId}:
-  get:
-    tags:
-      - 관리자 페이지
-    description: 신고 상세 조회
-    operationId: getReportById
-    content: application/json
-    parameters:
-      - name: Authorization
-        in: header
-        description: JWT
-        required: true
-      - name: 신고 고유 id
-        in: path
-        description: userId
-        required: true
-    responses:
-      '200':
-        description: 신고 상세 조회
-        content:
-          application/json:
-            schema:
-              $ref: '../components/_index.yaml#/schemas/Report'
-      '403':
-        description: 토큰 오류.
-        content:
-          application/json:
-            schema:
-              type: string
-              example: "정상적인 토큰이 아닙니다."
-      '404':
-        description: id 이상
-        content:
-          application/json:
-            schema:
-              type: string
-              example: "해당 신고가 존재하지 않습니다."
-  
-  get:
-    tags:
-      - 메인 화면_편지
-    description: 도착한 편지 상세
-    operationId: getLetterById
-    parameters:
-      - name: status = arrived
-        in: query
-        description: 아직 도착하지 않음
-        required: true
-      - name: 편지 id
-        in: path
-        description: letterId
-        required: true
-    responses:
-      '200':
-        description: 도착한 편지 조회 완료
-        content:
-          application/json:
-            schema:
-              - $ref: '../components/_index.yaml#/schemas/Letter'
-      '403':
-        description: 토큰 오류.
-        content:
-          application/json:
-            schema:
-              type: string
-              example: "정상적인 토큰이 아닙니다."
-      '404':
-        description: id 오류.
-        content:
-          application/json:
-            schema:
-              type: string
-              example: "해당 편지가 존재하지 않습니다."
+# /reports/{reportId}:
+  # get:
+  #   tags:
+  #     - 관리자 페이지
+  #   description: 신고 상세 조회
+  #   operationId: getReportById
+  #   content: application/json
+  #   parameters:
+  #     - name: Authorization
+  #       in: header
+  #       description: JWT
+  #       required: true
+  #     - name: 신고 고유 id
+  #       in: path
+  #       description: userId
+  #       required: true
+  #   responses:
+  #     '200':
+  #       description: 신고 상세 조회
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '../components/_index.yaml#/schemas/Report'
+  #     '403':
+  #       description: 토큰 오류.
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: string
+  #             example: "정상적인 토큰이 아닙니다."
+  #     '404':
+  #       description: id 이상
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: string
+  #             example: "해당 신고가 존재하지 않습니다."
