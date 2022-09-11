@@ -30,7 +30,5 @@ jobs:
       run: npm ci
     - name: install packages
       run: npm install
-    - name: test
-      run: npm test
     - name: start nodemon
       run: npm start --if-present
