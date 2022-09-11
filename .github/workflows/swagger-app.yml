@@ -29,6 +29,6 @@ jobs:
     - name: CI
       run: npm ci
     - name: Build Swagger Docs
-      run: npm build
+      run: npm run build
     - name: start nodemon
       run: npm start --if-present
