@@ -30,10 +30,6 @@ jobs:
     - name: Build Swagger Docs
       run: npm run build
 
-  run:
-    needs: [ build ]
-    runs-on: ubuntu-latest
-
-    steps:    
     - name: run express app
       run: npm start
+
