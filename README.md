@@ -1,4 +1,4 @@
-### **API URL**
+### **Swagger**
 
 https://maeilmail-api-docs.herokuapp.com/
 
