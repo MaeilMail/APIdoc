@@ -1,10 +1,8 @@
 openapi: "3.0.3"
 info: 
   version: "1.0.0"
-  title: "Study"
-  description: "메인 기능 api입니다."
-servers:
-  - url: http://localhost:3000/
+  title: "매일메일"
+  description: "WAS API Docs"
 paths:
   $ref: './paths/_index.yaml' 
 components:
