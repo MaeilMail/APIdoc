@@ -1,3 +1,7 @@
+### **API URL**
+
+https://maeilmail-api-docs.herokuapp.com/
+
 ### **USER API**
 
 - **회원 가입** **POST `/api/users`**
